@@ -24,7 +24,7 @@ public class PlayerDAO {
         }
     }
 
-    // 🔥 YOUR METHOD MUST BE INSIDE THIS CLASS
+    // YOUR METHOD MUST BE INSIDE THIS CLASS
     public void addPlayer(int id, String username, int level, String country) {
 
         Connection con = null;
@@ -53,4 +53,24 @@ public class PlayerDAO {
             System.out.println("Error adding player");
         }
     }
+    public void updatePlayer(int id, String name, int level, String country) throws Exception {
+    Connection con = DBConnection.getConnection();
+    PreparedStatement ps = con.prepareStatement(
+        "UPDATE PLAYERS SET username=?, player_level=?, country=? WHERE player_id=?"
+    );
+    ps.setString(1, name);
+    ps.setInt(2, level);
+    ps.setString(3, country);
+    ps.setInt(4, id);
+    ps.executeUpdate();
+}
+
+public void deletePlayer(int id) throws Exception {
+    Connection con = DBConnection.getConnection();
+    PreparedStatement ps = con.prepareStatement(
+        "DELETE FROM PLAYERS WHERE player_id=?"
+    );
+    ps.setInt(1, id);
+    ps.executeUpdate();
+}
 }

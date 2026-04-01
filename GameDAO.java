@@ -43,4 +43,29 @@ public class GameDAO {
             e.printStackTrace();
         }
     }
+public void updateGame(int id, String name, String genre) throws Exception {
+    Connection con = DBConnection.getConnection();
+
+    PreparedStatement ps = con.prepareStatement(
+        "UPDATE GAMES SET game_name=?, genre=? WHERE game_id=?"
+    );
+
+    ps.setString(1, name);
+    ps.setString(2, genre);
+    ps.setInt(3, id);
+
+    ps.executeUpdate();
+}
+
+public void deleteGame(int id) throws Exception {
+    Connection con = DBConnection.getConnection();
+
+    PreparedStatement ps = con.prepareStatement(
+        "DELETE FROM GAMES WHERE game_id=?"
+    );
+
+    ps.setInt(1, id);
+
+    ps.executeUpdate();
+}
 }

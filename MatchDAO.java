@@ -52,4 +52,25 @@ public class MatchDAO {
             e.printStackTrace();
         }
     }
+        public void updateMatch(int id, int pid, int gid, int score, String date) throws Exception {
+        Connection con = DBConnection.getConnection();
+        PreparedStatement ps = con.prepareStatement(
+            "UPDATE MATCHES SET player_id=?, game_id=?, score=?, match_date=TO_DATE(?, 'YYYY-MM-DD') WHERE match_id=?"
+        );
+        ps.setInt(1, pid);
+        ps.setInt(2, gid);
+        ps.setInt(3, score);
+        ps.setString(4, date);
+        ps.setInt(5, id);
+        ps.executeUpdate();
+    }
+
+    public void deleteMatch(int id) throws Exception {
+        Connection con = DBConnection.getConnection();
+        PreparedStatement ps = con.prepareStatement(
+            "DELETE FROM MATCHES WHERE match_id=?"
+        );
+        ps.setInt(1, id);
+        ps.executeUpdate();
+    }
 }
