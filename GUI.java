@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.*;
 import java.sql.*;
 
 public class GUI extends JFrame {
@@ -14,59 +15,60 @@ public class GUI extends JFrame {
 
     public GUI() {
 
-        setTitle("🎮 Game Management System");
-        setSize(800, 500);
+        setTitle("Game Management System");
+        setSize(900, 550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // DARK THEME
-        UIManager.put("control", new Color(40, 40, 40));
-        UIManager.put("info", new Color(40, 40, 40));
-        UIManager.put("nimbusBase", new Color(18, 30, 49));
-        UIManager.put("text", Color.WHITE);
+        // ===== SIDEBAR =====
+        JPanel sidebar = new JPanel();
+        sidebar.setLayout(new GridLayout(6, 1, 10, 10));
+        sidebar.setBackground(new Color(20, 20, 20));
+        sidebar.setPreferredSize(new Dimension(180, 0));
+        sidebar.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 
-        // HEADER
-        JLabel title = new JLabel("GAME MANAGEMENT SYSTEM", JLabel.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 22));
-        title.setForeground(Color.WHITE);
-        title.setOpaque(true);
-        title.setBackground(new Color(30, 30, 30));
-        title.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        add(title, BorderLayout.NORTH);
-
-        // TABLE
-        model = new DefaultTableModel();
-        table = new JTable(model);
-        table.setRowHeight(25);
-        table.setFont(new Font("Arial", Font.PLAIN, 14));
-
-        JScrollPane scroll = new JScrollPane(table);
-        add(scroll, BorderLayout.CENTER);
-
-        // BUTTON PANEL
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 3, 10, 10));
-        panel.setBackground(new Color(30, 30, 30));
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        JButton btnPlayers = createButton("View Players");
-        JButton btnGames = createButton("View Games");
-        JButton btnMatches = createButton("View Matches");
+        JButton btnPlayers = createButton("Players");
+        JButton btnGames = createButton("Games");
+        JButton btnMatches = createButton("Matches");
         JButton btnAddPlayer = createButton("Add Player");
         JButton btnAddGame = createButton("Add Game");
         JButton btnAddMatch = createButton("Add Match");
 
-        panel.add(btnPlayers);
-        panel.add(btnGames);
-        panel.add(btnMatches);
-        panel.add(btnAddPlayer);
-        panel.add(btnAddGame);
-        panel.add(btnAddMatch);
+        sidebar.add(btnPlayers);
+        sidebar.add(btnGames);
+        sidebar.add(btnMatches);
+        sidebar.add(btnAddPlayer);
+        sidebar.add(btnAddGame);
+        sidebar.add(btnAddMatch);
 
-        add(panel, BorderLayout.SOUTH);
+        add(sidebar, BorderLayout.WEST);
 
-        // ACTIONS
+        // ===== TOP HEADER =====
+        JLabel title = new JLabel("Game Management Dashboard", JLabel.CENTER);
+        title.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        title.setOpaque(true);
+        title.setBackground(new Color(30, 30, 30));
+        title.setForeground(Color.WHITE);
+        title.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        add(title, BorderLayout.NORTH);
+
+        // ===== TABLE =====
+        model = new DefaultTableModel();
+        table = new JTable(model);
+        table.setRowHeight(28);
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        table.setGridColor(new Color(70, 70, 70));
+        table.setBackground(new Color(45, 45, 45));
+        table.setForeground(Color.WHITE);
+        table.setSelectionBackground(new Color(90, 130, 200));
+
+        JScrollPane scroll = new JScrollPane(table);
+        scroll.getViewport().setBackground(new Color(45, 45, 45));
+
+        add(scroll, BorderLayout.CENTER);
+
+        // ===== ACTIONS =====
         btnPlayers.addActionListener(e -> loadPlayers());
         btnGames.addActionListener(e -> loadGames());
         btnMatches.addActionListener(e -> loadMatches());
@@ -78,17 +80,29 @@ public class GUI extends JFrame {
         setVisible(true);
     }
 
-    // Button Styling
+    // ===== BUTTON STYLE =====
     JButton createButton(String text) {
         JButton btn = new JButton(text);
         btn.setFocusPainted(false);
-        btn.setBackground(new Color(60, 63, 65));
+        btn.setBackground(new Color(50, 50, 50));
         btn.setForeground(Color.WHITE);
-        btn.setFont(new Font("Arial", Font.BOLD, 14));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+        // Hover effect
+        btn.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                btn.setBackground(new Color(70, 130, 180));
+            }
+
+            public void mouseExited(MouseEvent e) {
+                btn.setBackground(new Color(50, 50, 50));
+            }
+        });
+
         return btn;
     }
 
-    // ================= LOAD DATA =================
+    // ===== LOAD DATA =====
 
     void loadPlayers() {
         try {
@@ -165,7 +179,7 @@ public class GUI extends JFrame {
         }
     }
 
-    // ================= ADD DATA =================
+    // ===== ADD DATA =====
 
     void addPlayer() {
         try {
